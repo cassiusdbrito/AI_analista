@@ -1,6 +1,6 @@
 # README
 
-## SSOBRE O PROJETO
+## SOBRE O PROJETO
 Inteligência Artificial que recebe databases e um contexto em texto e retorna insights para o usuário.
 
 ## Para Colaboradores
