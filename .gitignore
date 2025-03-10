@@ -1,0 +1,17 @@
+# Ambiente virtual do Poetry (caso esteja dentro do projeto)
+.venv/
+
+# Arquivos do Poetry que não precisam ser versionados
+poetry.lock
+
+# Arquivos de cache do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Configurações de IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace

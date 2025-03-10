@@ -1,0 +1,28 @@
+[project]
+name = "ai-analistadados"
+version = "0.1.0"
+description = "IA que retorna insights"
+authors = [
+    {name = "cassiusdbrito",email = "cassius.d.brito@gmail.com"}
+]
+
+readme = "README.md"
+requires-python = ">=3.12"
+
+[tool.poetry.dependencies]
+fastapi = "0.115.0"
+pandas = "^2.0"
+numpy = "^1.24"
+scikit-learn = "^1.2"
+
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.0"
+
+[tool.poetry]
+packages = [{include = "ai_analistadados", from = "src"}]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
