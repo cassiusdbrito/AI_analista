@@ -27,5 +27,14 @@ Se preferir não utilizar o poetry, você pode criar o ambiente do projeto da ma
 ```bash
 pip install -r requirements.txt
 ```
+Para instalar ou atualizar uma dependência que será adicionada/atualizada, usa-se:  
+```bash
+poetry add nome_da_dependência
+```
+ou:  
+```bash
+pip install nome_da_dependência
+```
+
 
 
