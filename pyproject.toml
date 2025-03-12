@@ -3,26 +3,27 @@ name = "ai-analistadados"
 version = "0.1.0"
 description = "IA que retorna insights"
 authors = [
-    {name = "cassiusdbrito",email = "cassius.d.brito@gmail.com"}
+    {name = "cassiusdbrito", email = "cassius.d.brito@gmail.com"}
 ]
 
 readme = "README.md"
-requires-python = ">=3.12"
-
-[tool.poetry.dependencies]
-fastapi = "0.115.0"
-pandas = "^2.0"
-numpy = "^1.24"
-scikit-learn = "^1.2"
-
-
-[tool.poetry.dev-dependencies]
-pytest = "^7.0"
+requires-python = ">=3.11,<3.13"
 
 [tool.poetry]
 packages = [{include = "ai_analistadados", from = "src"}]
 
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+fastapi = "0.115.0"
+pandas = "^2.0"
+numpy = "^1.24"
+scikit-learn = "^1.2"
+ydata-profiling = {extras = ["notebook"], version = "^4.14.0"}
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
