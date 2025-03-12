@@ -9,6 +9,7 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+.python-version
 
 # Configurações de IDEs
 .vscode/
