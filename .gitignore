@@ -16,3 +16,6 @@ __pycache__/
 .idea/
 *.sublime-project
 *.sublime-workspace
+
+#Bins
+*.bin
