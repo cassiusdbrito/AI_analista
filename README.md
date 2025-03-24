@@ -1,40 +1,83 @@
-# README
+# Assistente de Análise de Dados (Open Source)
 
-## SOBRE O PROJETO
-Inteligência Artificial que recebe databases e um contexto em texto e retorna insights para o usuário.
+Um assistente de análise de dados baseado em IA usando modelos open source do Hugging Face.
 
-## Para Colaboradores
+## Modelos Utilizados
 
-### Clonagem do Repositório
-- Para clonar o git:  
-```bash  
-git clone https://github.com/cassiusdbrito/AI_analista   
-cd ai_analistadados
-```
+- **Modelo de Linguagem**: BLOOM-560M (bigscience/bloom-560m)
+- **Modelo de Embeddings**: all-MiniLM-L6-v2 (sentence-transformers)
 
-### Poetry
-A ambientação do projeto foi organizada com o poetry, caso não tenha, instale o poetry através do comando:  
+## Instalação
+
+1. Clone o repositório:
 ```bash
-pip install poetry
+git clone https://github.com/seu-usuario/ai-analistadados.git
+cd ai-analistadados
 ```
-### Instalando as Dependências
-Para instalar as dependências do projeto usando o poetry, é necessário ter clonado o repositório antes, ou ter criado um ambiente com arquivo .toml que possua as dependências citadas no repositório. Assim, o poetry instala todas as dependências citadas no arquivo .toml:  
-  
+
+2. Instale as dependências usando Poetry:
 ```bash
 poetry install
 ```
-Se preferir não utilizar o poetry, você pode criar o ambiente do projeto da maneira que preferir e usar e baixar as dependências. Um exemplo é listando elas em um arquivo .txt e usando o pacote pip para a instalação:  
-```bash
-pip install -r requirements.txt
+
+3. Configure as variáveis de ambiente:
+- Crie um arquivo `.env` na raiz do projeto com as seguintes configurações:
 ```
-Para instalar ou atualizar uma dependência que será adicionada/atualizada, usa-se:  
-```bash
-poetry add nome_da_dependência
+# Configurações dos modelos
+MODEL_NAME=bigscience/bloom-560m
+EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
+
+# Configurações de processamento
+MAX_LENGTH=512
+TEMPERATURE=0.7
+TOP_P=0.95
+
+# Configurações de hardware
+USE_CUDA=true
+LOW_CPU_MEMORY=true
 ```
-ou:  
-```bash
-pip install nome_da_dependência
+
+## Uso
+
+```python
+from ai_analistadados.models.assistente import AssistenteAnaliseDados
+
+# Inicializa o assistente
+assistente = AssistenteAnaliseDados()
+
+# Faz uma pergunta
+pergunta = "Como faço uma análise exploratória básica de um dataset usando pandas?"
+resposta = assistente.processar_pergunta(pergunta)
+print(resposta)
+
+# Calcula similaridade semântica entre textos
+texto1 = "Análise de dados com pandas"
+texto2 = "Explorando datasets usando o pandas"
+similaridade = assistente.similaridade_semantica(texto1, texto2)
+print(f"Similaridade: {similaridade:.2f}")
+
+# Limpa o histórico se necessário
+assistente.limpar_memoria()
 ```
+
+## Funcionalidades
+
+- Análise exploratória de dados
+- Visualização de dados
+- Insights estatísticos
+- Histórico de conversas
+- Cálculo de similaridade semântica
+- Suporte a CPU e GPU (CUDA)
+- 100% Open Source
+
+## Requisitos de Hardware
+
+- CPU: Mínimo de 8GB de RAM recomendado
+- GPU: Opcional, mas recomendado para melhor performance (CUDA compatível)
+
+## Contribuindo
+
+Contribuições são bem-vindas! Por favor, sinta-se à vontade para enviar um Pull Request.
 
 
 

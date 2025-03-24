@@ -1,0 +1,59 @@
+# Gráficos Básicos com Matplotlib e Seaborn
+
+## Exemplo 1: Gráfico de Linha
+```python
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+
+# Criando dados de exemplo
+dados = pd.DataFrame({
+    'data': pd.date_range(start='2023-01-01', periods=10),
+    'valor': [10, 15, 13, 17, 20, 16, 19, 22, 18, 21]
+})
+
+# Criando gráfico de linha
+plt.figure(figsize=(10, 6))
+plt.plot(dados['data'], dados['valor'], marker='o')
+plt.title('Evolução de Valores ao Longo do Tempo')
+plt.xlabel('Data')
+plt.ylabel('Valor')
+plt.grid(True)
+plt.show()
+```
+
+## Exemplo 2: Gráfico de Barras
+```python
+# Dados de exemplo
+categorias = ['A', 'B', 'C', 'D']
+valores = [25, 40, 30, 35]
+
+# Criando gráfico de barras
+plt.figure(figsize=(8, 6))
+plt.bar(categorias, valores)
+plt.title('Valores por Categoria')
+plt.xlabel('Categorias')
+plt.ylabel('Valores')
+plt.show()
+```
+
+## Exemplo 3: Gráfico de Dispersão
+```python
+# Dados de exemplo
+x = [1, 2, 3, 4, 5]
+y = [2, 4, 5, 4, 5]
+
+# Criando gráfico de dispersão
+plt.figure(figsize=(8, 6))
+plt.scatter(x, y)
+plt.title('Gráfico de Dispersão')
+plt.xlabel('X')
+plt.ylabel('Y')
+plt.show()
+```
+
+## Dicas importantes:
+1. Use plt.figure() para controlar o tamanho do gráfico
+2. Sempre adicione títulos e labels
+3. Use grid() para facilitar a leitura
+4. Considere usar seaborn para estilos mais bonitos 

@@ -1,0 +1,71 @@
+# Limpeza e Pré-processamento de Dados
+
+## Exemplo 1: Tratamento de Valores Ausentes
+```python
+import pandas as pd
+import numpy as np
+
+# Criando dados com valores ausentes
+dados = pd.DataFrame({
+    'coluna1': [1, np.nan, 3, np.nan, 5],
+    'coluna2': [10, 20, np.nan, 40, 50],
+    'coluna3': ['A', 'B', 'C', np.nan, 'E']
+})
+
+# Verificando valores ausentes
+print("Valores ausentes por coluna:")
+print(dados.isnull().sum())
+
+# Removendo linhas com valores ausentes
+dados_limpos = dados.dropna()
+
+# Preenchendo valores ausentes com média
+dados['coluna1'] = dados['coluna1'].fillna(dados['coluna1'].mean())
+
+# Preenchendo valores ausentes com moda
+dados['coluna3'] = dados['coluna3'].fillna(dados['coluna3'].mode()[0])
+```
+
+## Exemplo 2: Tratamento de Outliers
+```python
+# Criando dados com outliers
+dados = pd.Series([1, 2, 3, 4, 5, 100, 6, 7, 8, 9])
+
+# Calculando limites para detecção de outliers
+Q1 = dados.quantile(0.25)
+Q3 = dados.quantile(0.75)
+IQR = Q3 - Q1
+limite_inferior = Q1 - 1.5 * IQR
+limite_superior = Q3 + 1.5 * IQR
+
+# Identificando outliers
+outliers = dados[(dados < limite_inferior) | (dados > limite_superior)]
+
+# Removendo outliers
+dados_limpos = dados[(dados >= limite_inferior) & (dados <= limite_superior)]
+```
+
+## Exemplo 3: Normalização e Padronização
+```python
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+
+# Criando dados de exemplo
+dados = pd.DataFrame({
+    'feature1': [1, 2, 3, 4, 5],
+    'feature2': [10, 20, 30, 40, 50]
+})
+
+# Padronização (z-score)
+scaler = StandardScaler()
+dados_padronizados = scaler.fit_transform(dados)
+
+# Normalização (0-1)
+normalizer = MinMaxScaler()
+dados_normalizados = normalizer.fit_transform(dados)
+```
+
+## Dicas importantes:
+1. Sempre verifique a distribuição dos dados antes de tratar outliers
+2. Considere o contexto ao tratar valores ausentes
+3. Escolha o método de normalização adequado ao seu caso
+4. Mantenha os dados originais em backup 

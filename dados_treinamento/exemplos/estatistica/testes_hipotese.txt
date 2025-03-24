@@ -1,0 +1,62 @@
+# Testes de Hipótese com Python
+
+## Exemplo 1: Teste t para Médias
+```python
+import numpy as np
+from scipy import stats
+
+# Criando dados de exemplo
+np.random.seed(42)
+grupo1 = np.random.normal(10, 2, 30)
+grupo2 = np.random.normal(12, 2, 30)
+
+# Teste t independente
+t_stat, p_valor = stats.ttest_ind(grupo1, grupo2)
+print(f"Estatística t: {t_stat:.3f}")
+print(f"P-valor: {p_valor:.3f}")
+
+# Teste t pareado
+t_stat_pareado, p_valor_pareado = stats.ttest_rel(grupo1, grupo2)
+print(f"\nTeste t pareado:")
+print(f"Estatística t: {t_stat_pareado:.3f}")
+print(f"P-valor: {p_valor_pareado:.3f}")
+```
+
+## Exemplo 2: Teste de Qui-Quadrado
+```python
+from scipy.stats import chi2_contingency
+
+# Criando tabela de contingência
+tabela = np.array([[10, 20, 30],
+                   [15, 25, 35],
+                   [20, 30, 40]])
+
+# Teste de qui-quadrado
+chi2, p_valor, graus_liberdade, esperados = chi2_contingency(tabela)
+print(f"\nTeste de Qui-Quadrado:")
+print(f"Estatística chi2: {chi2:.3f}")
+print(f"P-valor: {p_valor:.3f}")
+print(f"Graus de liberdade: {graus_liberdade}")
+```
+
+## Exemplo 3: ANOVA
+```python
+from scipy.stats import f_oneway
+
+# Criando dados para ANOVA
+grupo1 = np.random.normal(10, 2, 30)
+grupo2 = np.random.normal(12, 2, 30)
+grupo3 = np.random.normal(15, 2, 30)
+
+# Teste ANOVA
+f_stat, p_valor = f_oneway(grupo1, grupo2, grupo3)
+print(f"\nTeste ANOVA:")
+print(f"Estatística F: {f_stat:.3f}")
+print(f"P-valor: {p_valor:.3f}")
+```
+
+## Dicas importantes:
+1. Verifique as suposições dos testes
+2. Use p-valor < 0.05 para significância estatística
+3. Considere o tamanho do efeito
+4. Faça correções para múltiplos testes 

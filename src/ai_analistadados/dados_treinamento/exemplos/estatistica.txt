@@ -1,0 +1,46 @@
+Análise Estatística com Python
+
+1. Estatísticas Descritivas:
+import numpy as np
+from scipy import stats
+
+# Média, mediana, moda
+media = np.mean(dados)
+mediana = np.median(dados)
+moda = stats.mode(dados)
+
+# Desvio padrão e variância
+desvio_padrao = np.std(dados)
+variancia = np.var(dados)
+
+2. Testes de Hipótese:
+# Teste t para amostras independentes
+t_stat, p_valor = stats.ttest_ind(grupo1, grupo2)
+
+# Teste de qui-quadrado
+chi2, p_valor = stats.chi2_contingency(tabela_contingencia)
+
+# ANOVA
+f_stat, p_valor = stats.f_oneway(*grupos)
+
+3. Correlação:
+# Correlação de Pearson
+corr, p_valor = stats.pearsonr(x, y)
+
+# Matriz de correlação
+corr_matrix = df.corr()
+
+4. Distribuições:
+# Ajuste de distribuição
+params = stats.norm.fit(dados)
+pdf = stats.norm.pdf(x, *params)
+
+# Teste de normalidade
+stat, p_valor = stats.normaltest(dados)
+
+5. Intervalos de Confiança:
+# Intervalo de confiança para média
+ci = stats.t.interval(0.95, len(dados)-1, loc=np.mean(dados), scale=stats.sem(dados))
+
+# Intervalo de confiança para proporção
+ci = stats.binom.interval(0.95, n, p) 

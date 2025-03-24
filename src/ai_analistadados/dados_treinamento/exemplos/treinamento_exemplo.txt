@@ -1,0 +1,6 @@
+#Exemplo de separação de dados para Treino e Teste
+def train_test(df_final):
+    #Separar treino e teste
+    X_train, X_test, y_train, y_test = train_test_split(df_final.drop("target", axis=1), df_final["target"], test_size=0.2, random_state=42)
+
+    return X_train, y_train, X_test, y_test
