@@ -1,0 +1,2 @@
+def example():
+    input("Press the <ENTER> key to continue...")

@@ -1,0 +1,16 @@
+
+while True:
+    data = conn.recv(386000)
+    nparr = numpy.frombuffer(data, numpy.uint8)
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    #print(numpy.shape(img))
+    cv2.imshow('VideoCap', img)
+    
+    if cv2.waitKey(1) == ord('q'):
+        break
+    
+    if not data:
+        break
+
+cv2.destroyAllWindows()    
+conn.close()

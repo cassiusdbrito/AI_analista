@@ -1,0 +1,4 @@
+import numpy as np
+arr = np.ones((50,100,25))
+np.vstack(arr).shape
+> (5000, 25)

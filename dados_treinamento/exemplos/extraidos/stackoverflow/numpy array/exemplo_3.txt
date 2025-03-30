@@ -1,0 +1,55 @@
+
+def flatten_batch_dims(a: np.ndarray, n_batch_dims: int):
+    """flatten batch dimensions.
+
+    Parameters
+    ----------
+    a : np.ndarray
+        an array, batch dimensions first
+    n_batch_dims : int
+        number of batch dimensions
+
+    Returns
+    -------
+    np.ndarray
+        partially flattened array flattening the n_batch_dims first dimensions
+
+    """
+    if n_batch_dims not in range(a.ndim + 1):
+        raise ValueError(
+            f"n_batch_dims should be between 0 and a.ndim, yet from your input: {n_batch_dims=}, {a.ndim=}."
+        )
+    return a.reshape((-1,) + a.shape[n_batch_dims:])
+
+
+def unflatten_batch_dims(a, batch_dims):
+    """Undo effect of flatten_batch_dims, from the flattened array and the flattened shape.
+
+    Parameters
+    ----------
+    a : _type_
+        _description_
+    batch_dims :tuple
+        shape along the flattened axis
+
+    Returns
+    -------
+    np.ndarray
+        unflattened array
+    """
+    return a.reshape(batch_dims + a.shape[1:])
+
+
+def flatten_unflatten_test():
+    for i in range(100):
+        n_batch_dims = np.random.randint(4)
+        batch_dims = tuple(map(int, np.random.randint(1, 5, size=n_batch_dims)))
+        n_extra_dims = np.random.randint(4)
+        extra_dims = tuple(np.random.randint(1, 5, size=n_extra_dims))
+        total_size = batch_dims + extra_dims
+        a = np.random.randint(10, size=total_size)
+        print(batch_dims, a.shape)
+        b = flatten_batch_dims(a, n_batch_dims)
+        c = unflatten_batch_dims(b, batch_dims)
+        assert a.shape == c.shape, f"flatten/unflatten error with {a}"
+        assert np.all(a == c), f"flatten/unflatten error with {a}"

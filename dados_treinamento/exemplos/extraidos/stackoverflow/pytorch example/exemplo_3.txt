@@ -1,0 +1,39 @@
+def converter(observation):
+    px, py = observation["player position"]
+    playerBitBoard = torch.zeros([9, 9])
+    playerBitBoard[py, px] = 1
+
+    # making the bit boards for all apples
+    a1x, a1y = observation["apple 1"]
+    apple1BitBoard = torch.zeros([9, 9])
+    apple1BitBoard[a1y, a1x] = 1
+
+    a2x, a2y = observation["apple 2"]
+    apple2BitBoard = torch.zeros([9, 9])
+    apple2BitBoard[a2y, a2x] = 1
+
+    a3x, a3y = observation["apple 3"]
+    apple3BitBoard = torch.zeros([9, 9])
+    apple3BitBoard[a3y, a3x] = 1
+
+    # making the bit board for the key. Note that the key will have NONE values
+    # in its position. They must be dealt with. Current solution put all values
+    # in the key board equal to zero
+    key = observation["key position"]
+    keyBitBoard = torch.zeros([9, 9])
+    if key:
+        kx, ky = key
+        keyBitBoard[ky, kx] = 1
+
+    # making the time features
+    t = observation["time until nigth"]
+    timeBitBoard = torch.zeros(21)
+    timeBitBoard[t] = 1
+
+    # now we join all in a single array
+    return torch.cat([playerBitBoard.reshape(81),
+                      apple1BitBoard.reshape(81),
+                      apple2BitBoard.reshape(81),
+                      apple3BitBoard.reshape(81),
+                      keyBitBoard.reshape(81),
+                      timeBitBoard]).reshape((1, 426)) + torch.rand((1, 426))/100

@@ -1,0 +1,3 @@
+# a dictionary of marker styles
+from matplotlib.markers import MarkerStyle
+MarkerStyle.markers

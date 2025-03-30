@@ -1,0 +1,4 @@
+def myplot(ax, data, **kwargs):
+    ax.plot(data, label = "My plot", **kwargs)
+    ax.set_title("My plot")
+    ax.legend()
