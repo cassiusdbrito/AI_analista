@@ -1,4 +1,4 @@
-from ai_analistadados.eda import preProcessing
+from ai.eda import preProcessing
 import pandas as pd
 
 df = preProcessing.preProcess(r"C:\Users\cassi\AI_analistaDados\src\ai_analistadados\data\titanic.csv")

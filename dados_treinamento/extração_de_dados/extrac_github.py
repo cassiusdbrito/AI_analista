@@ -1,12 +1,18 @@
 import requests
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def extrair_exemplos_github():
     # Configuração da API do GitHub
     headers = {
         'Authorization': f'token {os.getenv("GITHUB_TOKEN")}'
     }
-    
+    '''
+    Tem que buscar mais diretórios pra repositórios relevantes
+
+    '''
     # Buscar repositórios relevantes
     repos = [
         'pandas-dev/pandas',

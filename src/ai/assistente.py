@@ -5,7 +5,7 @@ from langchain_community.llms import HuggingFaceEndpoint
 from langchain.memory import ConversationBufferMemory
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
-from ai_analistadados.models.langchain_trainer import LangChainTrainer
+from .langchain_trainer import LangChainTrainer
 import torch
 
 load_dotenv()

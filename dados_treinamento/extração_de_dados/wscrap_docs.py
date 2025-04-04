@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-import pandas as pd
-import os
+
 
 def extrair_exemplos_documentacao():
     # URLs de documentação relevante

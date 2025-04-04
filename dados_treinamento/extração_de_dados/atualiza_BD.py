@@ -2,6 +2,7 @@ from wscrap_docs import extrair_exemplos_documentacao
 from extrac_notebooks import extrair_codigos_notebooks
 from extrac_github import extrair_exemplos_github
 import os
+from dotenv import load_dotenv
 # from monitoramento import monitorar_novos_conteudos
 
 load_dotenv()
