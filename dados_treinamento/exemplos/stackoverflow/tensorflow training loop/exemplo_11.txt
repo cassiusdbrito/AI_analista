@@ -1,0 +1,184 @@
+
+
+
+
+
+
+
+
+1        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Althogh I think tensorflows errors are very helpful, but your answer is yes, you can think from basic to high level with tensorflow. And you can run your network in dynamic or static.
+When I wanted to learn tensorflow and keras, I wrote some code on colab and you can find one of them that's related to your question here. But I will write the part that you want here (it's not the full code):
+batch_size = 32
+epochs = 10
+loss_func = keras.losses.CategoricalCrossentropy()
+opt = keras.optimizers.Adam(learning_rate=0.003)
+
+(valX, valy) = (trainX[-10000:], trainy[-10000:])
+
+# for easily shuffling later
+train_dataset = tf.data.Dataset.from_tensor_slices((trainX, trainy))
+
+# layers
+conv1 = Conv2D_custom(32, (3,3), activation='relu', input_shape = trainX.shape[1:])
+conv2 = Conv2D_custom(64, (3,3), activation='relu')
+dense = Dense_custom(10, activation='softmax')
+max1 = MaxPooling2D((2, 2))
+max2 = MaxPooling2D((2, 2))
+flat = Flatten()
+dropout = Dropout(0.5)
+
+for i in range(epochs):
+  print("Epoch: ", i)
+  epoch_loss = 0
+
+  train_dataset = train_dataset.shuffle(buffer_size=1024)
+  train_batched = train_dataset.batch(batch_size)
+
+  for step, (batchX, batchy) in enumerate(train_batched):
+    with tf.GradientTape() as tape:
+      x = conv1(batchX)
+      x = max1(x)
+      x = conv2(x)
+      x = max2(x)
+      x = flat(x)
+      x = dropout(x, training=True)
+      x = dense(x)
+      loss = loss_func(batchy, x)
+
+    trainable_vars = conv1.trainable_weights + conv2.trainable_weights + dense.trainable_weights
+    grads = tape.gradient(loss, trainable_vars)
+    opt.apply_gradients(zip(grads, trainable_vars))
+
+    epoch_loss += loss
+
+    if step % 200 == 0:
+      print("\tStep ", step, ":\t loss = ", epoch_loss.numpy()/(step+1))
+  
+  # epoch ended, validate it
+  x = conv1(valX)
+  x = max1(x)
+  x = conv2(x)
+  x = max2(x)
+  x = flat(x)
+  x = dropout(x, training=False)
+  x = dense(x)
+  val_loss = loss_func(valy, x)
+  
+  print("Epoch ", i, " ended.\t", "loss = ", epoch_loss.numpy()/len(train_batched), " ,\tval_loss = ", val_loss.numpy())
+
+
+Its not pretty and you can do much better than this (I didn't know a lot about tensorflow and keras). But it works well for MNIST dataset and is customizable as you want.
+Tensorflow has something called Eager execution and you can run your network dynamically with it, it just needs to be enabled. most of the time tensorflow struggles with eager execution itself and even you don't need to tell tensorflow when to run in eager mode and when to run in graph mode (it will automatically use graph mode when possible, to get more performance).
+And again you can be sure that you can deal with tensorflow in each level you want, almost from scratch to high level as in keras.
+Hope it helps, and have fun programming :)
+
+
+
+
+
+
+
+
+Share
+
+
+Improve this answer
+
+
+
+                        Follow
+                        
+
+
+
+
+
+
+
+
+
+
+            answered Oct 20, 2020 at 16:11
+
+
+
+
+
+
+aminamin
+
+28944 silver badges1616 bronze badges
+
+
+
+
+
+
+
+2
+
+
+
+
+
+
+
+
+
+
+this is excellent. Yes, let me try this code and see if I can step through it. This is exactly what I was looking for to try out debugging.
+
+– krishnab
+
+
+Commented
+Oct 20, 2020 at 16:47
+
+
+
+
+
+
+
+
+
+
+
+Glad to know. if you had problem in it, let me know
+
+– amin
+
+
+Commented
+Oct 20, 2020 at 17:07
+
+
+
+
+
+
+
+Add a comment
+ | 
+
+
+

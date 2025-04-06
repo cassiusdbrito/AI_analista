@@ -1,0 +1,1001 @@
+
+
+
+
+
+
+
+
+
+
+
+
+ Home
+
+
+
+
+
+
+ Questions
+
+
+
+
+
+
+ Tags
+
+
+
+
+
+
+
+ Discussions
+Labs
+
+
+
+
+
+
+ Chat
+
+
+
+
+
+
+
+ Users
+
+
+
+
+
+
+
+ Companies
+
+
+
+
+
+
+Collectives
+
+
+
+
+
+
+
+
+                                        Communities for your favorite technologies.  Explore all Collectives
+
+
+
+
+
+Teams
+
+
+
+            Ask questions, find answers and collaborate at work with Stack Overflow for Teams.
+        
+Try Teams for free
+Explore Teams
+
+
+
+
+Teams
+
+
+
+
+
+
+
+            Ask questions, find answers and collaborate at work with Stack Overflow for Teams.
+            Explore Teams
+
+
+
+
+
+
+
+
+
+Collectives™ on Stack Overflow
+Find centralized, trusted content and collaborate around the technologies you use most.
+
+                    Learn more about Collectives
+                
+
+
+
+
+
+Teams
+Q&A for work
+Connect and share knowledge within a single location that is structured and easy to search.
+
+                    Learn more about Teams
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+Data Analysis with Python and Pandas Tutorial, part 7 from sentdex
+
+
+
+        Ask Question
+    
+
+
+
+
+
+Asked
+7 years, 7 months ago
+
+
+Modified
+7 years, 7 months ago
+
+
+Viewed
+                        296 times
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0        
+
+
+
+
+
+
+
+
+
+
+
+
+
+Video Link here: https://www.youtube.com/watch?v=WkIW0YLoQEE&index=7&list=PLQVvvaa0QuDc-3szzjeP6N6b0aDrrKyL-
+I'm having a difficult time with keeping the labels of the "State Name" columns in my code that has a "for loop" running through "indexed" data that the gentleman demonstrates through the video. I've noticed the tutorial is close to two years old, but I'm not entirely sure if some sort of patch or update is preventing my code from fully operating
+import quandl
+import pandas as pd
+import pickle
+
+api_key = open('C:\\Users\\TheSalt\\Documents\\{apicode}.txt','r').read()
+fiddy_states=pd.read_html('https://simple.wikipedia.org/wiki/List_of_U.S._states')
+#print (fiddy_states) 
+main_df = pd.DataFrame() 
+for abbv in fiddy_states[0][0][1:]:
+   query ="FMAC/HPI_" + str(abbv)
+   df = quandl.get(query, authtoken=api_key)
+   if main_df.empty:
+       main_df = df
+   else:
+       main_df = main_df.join(df, lsuffix= '.')
+
+print (main_df)
+
+Output:
+A Snip It of the Output 
+Any assistance is appreciated. 
+
+
+
+
+pythonpandasfor-loopdataframequandl
+
+
+
+
+
+
+
+
+
+Share
+
+
+Improve this question
+
+
+
+                        Follow
+                        
+
+
+
+
+
+
+
+
+
+
+edited Aug 15, 2017 at 22:49
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            asked Aug 15, 2017 at 2:12
+
+
+
+
+
+
+        user8350630user8350630
+
+
+
+
+
+
+
+
+5
+
+
+
+
+
+
+
+
+
+
+Can you please fix your grammar? I would love to help, but find it nearly impossible because you expressed your problems in a poor manner.
+
+– user3576467
+
+
+Commented
+Aug 15, 2017 at 2:19
+
+
+
+
+
+
+
+
+
+
+
+@user3576467: it seems understandable in English terms to me. What did you not understand? As it goes, this post is fairly high in readability terms, compared to some on the site...
+
+– halfer
+
+
+Commented
+Aug 15, 2017 at 12:42
+
+
+
+
+
+
+
+
+
+
+
+It's only this sentence: I'm having a difficult time with keeping the "State Name" columns in my code has the "for loop" is running through an "indexed" data that gentlemen demonstrate through the video. Can you please help clarify it?
+
+– user3576467
+
+
+Commented
+Aug 15, 2017 at 16:44
+
+
+
+
+
+
+
+
+
+
+
+I apologize. Is it easier to read now?
+
+– user8350630
+
+
+Commented
+Aug 15, 2017 at 22:47
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+If it needs to be better explained, I'm not understanding why the output is showing me generic "Value's" as the column labels when it is iterating through data that already has the abbreviations of the states as the labels. The labels seem to disappear.
+
+– user8350630
+
+
+Commented
+Aug 15, 2017 at 22:55
+
+
+
+
+
+
+
+Add a comment
+ | 
+
+
+
+ 
+
+
+
+
+
+
+Related questions
+
+
+
+
+                                1
+                            
+
+Different result of code example on book: Python for Data Analysis
+
+
+
+
+
+
+                                2
+                            
+
+python - understanding of for loop
+
+
+
+
+
+
+                                1
+                            
+
+Data Analysis using Python Pandas
+
+
+
+
+
+
+Related questions
+
+
+
+
+                                1
+                            
+
+Different result of code example on book: Python for Data Analysis
+
+
+
+
+
+
+                                2
+                            
+
+python - understanding of for loop
+
+
+
+
+
+
+                                1
+                            
+
+Data Analysis using Python Pandas
+
+
+
+
+
+
+                                0
+                            
+
+stuck with a simple pandas dataframe looping
+
+
+
+
+
+
+                                2
+                            
+
+Pandas Dataframe For Loop
+
+
+
+
+
+
+                                0
+                            
+
+Analysis of Data in Python (Dataframe and nested loops)
+
+
+
+
+
+
+                                0
+                            
+
+Applying for loops on dataframe?
+
+
+
+
+
+
+                                0
+                            
+
+For loop over dataframe python
+
+
+
+
+
+
+                                0
+                            
+
+Advanced using of for loop
+
+
+
+
+
+
+                                0
+                            
+
+python multiple for loop question (pandas, dataframe)
+
+
+
+
+
+
+
+ Load 7 more related questions
+                
+
+ Show fewer related questions
+                
+
+
+
+
+
+
+
+
+
+0
+
+
+
+
+
+
+            Sorted by:
+        
+
+            Reset to default
+        
+
+
+
+
+                        Highest score (default)
+                    
+
+                        Trending (recent votes count more)
+                    
+
+                        Date modified (newest first)
+                    
+
+                        Date created (oldest first)
+                    
+
+
+
+
+
+
+
+Know someone who can answer? Share a link to this question via email, Twitter, or Facebook.                                    
+
+
+
+
+
+
+
+                                    Your Answer
+                                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Thanks for contributing an answer to Stack Overflow!Please be sure to answer the question. Provide details and share your research!But avoid …Asking for help, clarification, or responding to other answers.Making statements based on opinion; back them up with references or personal experience.To learn more, see our tips on writing great answers.
+
+
+
+
+
+
+Draft saved
+Draft discarded
+
+
+
+
+
+
+
+
+
+
+Sign up or log in
+
+
+ Sign up using Google
+                        
+
+ Sign up using Email and Password
+                        
+
+
+
+Submit
+
+Post as a guest
+
+
+Name
+
+
+
+
+
+
+
+
+
+Email
+Required, but never shown
+
+
+
+
+
+
+
+
+
+
+
+
+Post as a guest
+
+
+Name
+
+
+
+
+
+
+
+
+
+Email
+Required, but never shown
+
+
+
+
+
+
+
+
+
+
+
+                                            Post Your Answer
+                                        
+
+                                            Discard
+                                        
+
+                                                By clicking “Post Your Answer”, you agree to our terms of service and acknowledge you have read our privacy policy.
+
+
+
+
+
+
+
+
+
+
+                            The Overflow Blog
+                        
+
+
+ 
+
+From training to inference: The new role of web data in LLMs
+
+
+
+
+ 
+
+Is AI a bubble or a revolution? The answer is yes.
+
+
+
+                            Featured on Meta
+                        
+
+
+ 
+
+Changes to reporting for the [status-review] escalation process
+
+
+
+
+ 
+
+Policy: Generative AI (e.g., ChatGPT) is banned
+
+
+
+
+ 
+
+A discussion about closed (and potentially useful) posts on Stack Overflow
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            Hot Network Questions
+        
+
+
+
+
+                    What is willful blindness?
+                
+
+
+
+                    Counting complexity of SAT with 2 occurrences
+                
+
+
+
+                    Repo rate and discount factors
+                
+
+
+
+                    Is nirvana not extinction?
+                
+
+
+
+                    Why doesn't the Cosmic Microwave Background have a more complex spectrum?
+                
+
+
+
+                    Contracting the First-Person Singular Präteritum
+                
+
+
+
+                    Fixing Math display issue
+                
+
+
+
+                    Python Exception Monitor
+                
+
+
+
+                    Is an unmodified Rubik's cube solvable from looking at three sides?
+                
+
+
+
+                    In search of a list of seven words tied together
+                
+
+
+
+                    Are degeneracies essential in presentation of higher algebraic objects?
+                
+
+
+
+                    What are the advantages for the US in starting a trade war with everyone else at the same time?
+                
+
+
+
+                    Contrasting results about time intervals measured by stationary and moving observers: why?
+                
+
+
+
+                    Is there any examples at all of loaned adjectival verbs / い-adjectives?
+                
+
+
+
+                    Monster-of-the-week teen/kids show from the late 1990s
+                
+
+
+
+                    How can I convert this vintage digital alarm clock from 50 Hz to 60 Hz?
+                
+
+
+
+                    How the Rectocrus walks
+                
+
+
+
+                    A group generated by an element and its conjugate must be solvable.
+                
+
+
+
+                    What is an example of "foundation" for Husserl?
+                
+
+
+
+                    How to make the lstlisting highlight keywords
+                
+
+
+
+                    Looking for connections between Parshas Tzav & Pesach
+                
+
+
+
+                    Choice of imperative verb when followed by « s'il vous plaît » or by « s'il te plaît »
+                
+
+
+
+                    "なんないスかねぇ" what does it mean?
+                
+
+
+
+                    mathematical metaphors in Alice's adventures
+                
+
+
+
+            more hot questions
+        
+
+
+
+
+            Question feed
+        
+
+
+
+
+                Subscribe to RSS
+            
+
+
+
+                        Question feed
+                        To subscribe to this RSS feed, copy and paste this URL into your RSS reader.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+lang-py
+
+
+

@@ -1,0 +1,1010 @@
+
+
+
+
+
+
+
+
+
+
+
+
+ Home
+
+
+
+
+
+
+ Questions
+
+
+
+
+
+
+ Tags
+
+
+
+
+
+
+
+ Discussions
+Labs
+
+
+
+
+
+
+ Chat
+
+
+
+
+
+
+
+ Users
+
+
+
+
+
+
+
+ Companies
+
+
+
+
+
+
+Collectives
+
+
+
+
+
+
+
+
+                                        Communities for your favorite technologies.  Explore all Collectives
+
+
+
+
+
+Teams
+
+
+
+            Ask questions, find answers and collaborate at work with Stack Overflow for Teams.
+        
+Try Teams for free
+Explore Teams
+
+
+
+
+Teams
+
+
+
+
+
+
+
+            Ask questions, find answers and collaborate at work with Stack Overflow for Teams.
+            Explore Teams
+
+
+
+
+
+
+
+
+
+Collectives™ on Stack Overflow
+Find centralized, trusted content and collaborate around the technologies you use most.
+
+                    Learn more about Collectives
+                
+
+
+
+
+
+Teams
+Q&A for work
+Connect and share knowledge within a single location that is structured and easy to search.
+
+                    Learn more about Teams
+                
+
+
+
+
+
+
+
+
+
+
+
+Simple Pytorch Example - Loss on training doesnt decrease
+
+
+
+        Ask Question
+    
+
+
+
+
+
+Asked
+7 years, 1 month ago
+
+
+Modified
+5 years, 8 months ago
+
+
+Viewed
+                        5k times
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1        
+
+
+
+
+
+
+
+
+
+
+
+
+
+I am just starting to try and learn pytorch and am finding it frustrating regardless of how it is advertised :)
+Here I am running a simple regression as an experiment but since the loss doesn't seem to be decreasing with each epoch (on the training) I must be doing something wrong -- either in training or how I am collecting the MSE?
+from __future__ import division
+import numpy as np
+import matplotlib.pyplot as plt
+
+import torch
+import torch.utils.data as utils_data
+from torch.autograd import Variable
+from torch import optim, nn
+from torch.utils.data import Dataset 
+import torch.nn.functional as F
+
+from sklearn.datasets import load_boston
+
+
+cuda=True
+
+
+#regular old numpy
+boston = load_boston()
+
+x=boston.data
+y=boston.target
+
+x.shape
+
+training_samples = utils_data.TensorDataset(x, y)
+data_loader = utils_data.DataLoader(training_samples, batch_size=10)
+
+len(data_loader) #number of batches in an epoch
+
+#override this
+class Net(nn.Module):
+    def __init__(self):
+         super(Net, self).__init__()
+
+         #all the layers
+         self.fc1   = nn.Linear(x.shape[1], 50)
+         self.drop = nn.Dropout(p=0.2)
+         self.fc2   = nn.Linear(50, 1)
+
+    #    
+    def forward(self, x):
+        x = F.relu(self.fc1(x))
+        x = self.drop(x)
+        x = self.fc2(x)
+
+        return x
+
+
+
+net=Net()
+if cuda:
+    net.cuda()
+print(net)
+
+# create a stochastic gradient descent optimizer
+optimizer = optim.Adam(net.parameters())
+# create a loss function (mse)
+loss = nn.MSELoss()
+
+# create a stochastic gradient descent optimizer
+optimizer = optim.Adam(net.parameters())
+# create a loss function (mse)
+loss = nn.MSELoss()
+
+# run the main training loop
+epochs =20
+hold_loss=[]
+
+for epoch in range(epochs):
+    cum_loss=0.
+    for batch_idx, (data, target) in enumerate(data_loader):
+        tr_x, tr_y = Variable(data.float()), Variable(target.float())
+        if cuda:
+            tr_x, tr_y = tr_x.cuda(), tr_y.cuda() 
+
+        # Reset gradient
+        optimizer.zero_grad()
+
+        # Forward pass
+        fx = net(tr_x)
+        output = loss(fx, tr_y) #loss for this batch
+        cum_loss += output.data[0] 
+
+        # Backward 
+        output.backward()
+
+        # Update parameters based on backprop
+        optimizer.step()
+    hold_loss.append(cum_loss)    
+    #print(epoch+1, cum_loss) #
+
+plt.plot(np.array(hold_loss))
+
+
+
+
+
+
+pythonpytorch
+
+
+
+
+
+
+
+
+
+Share
+
+
+Improve this question
+
+
+
+                        Follow
+                        
+
+
+
+
+
+
+
+
+
+
+edited Feb 8, 2018 at 20:51
+
+
+
+
+
+
+cmaher
+
+5,23511 gold badge2323 silver badges3434 bronze badges
+
+
+
+
+
+
+
+
+            asked Feb 8, 2018 at 0:27
+
+
+
+
+
+
+B_MinerB_Miner
+
+1,83255 gold badges3636 silver badges7070 bronze badges
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Add a comment
+ | 
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+                                        1 Answer
+                                    1
+
+
+
+
+
+
+            Sorted by:
+        
+
+            Reset to default
+        
+
+
+
+
+                        Highest score (default)
+                    
+
+                        Trending (recent votes count more)
+                    
+
+                        Date modified (newest first)
+                    
+
+                        Date created (oldest first)
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Well I just changed the line:
+training_samples = utils_data.TensorDataset(torch.from_numpy(x), torch.from_numpy(y))
+
+Adding the torch.from_numpy (otherwise, it was throwing an error, thus nor running) and I get a learning curve that looks something like this:
+
+
+
+
+
+
+
+
+
+Share
+
+
+Improve this answer
+
+
+
+                        Follow
+                        
+
+
+
+
+
+
+
+
+
+
+            answered Feb 8, 2018 at 8:26
+
+
+
+
+
+
+Manuel LagunasManuel Lagunas
+
+2,7612222 silver badges3232 bronze badges
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Add a comment
+ | 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                    Your Answer
+                                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Thanks for contributing an answer to Stack Overflow!Please be sure to answer the question. Provide details and share your research!But avoid …Asking for help, clarification, or responding to other answers.Making statements based on opinion; back them up with references or personal experience.To learn more, see our tips on writing great answers.
+
+
+
+
+
+
+Draft saved
+Draft discarded
+
+
+
+
+
+
+
+
+
+
+Sign up or log in
+
+
+ Sign up using Google
+                        
+
+ Sign up using Email and Password
+                        
+
+
+
+Submit
+
+Post as a guest
+
+
+Name
+
+
+
+
+
+
+
+
+
+Email
+Required, but never shown
+
+
+
+
+
+
+
+
+
+
+
+
+Post as a guest
+
+
+Name
+
+
+
+
+
+
+
+
+
+Email
+Required, but never shown
+
+
+
+
+
+
+
+
+
+
+
+                                            Post Your Answer
+                                        
+
+                                            Discard
+                                        
+
+                                                By clicking “Post Your Answer”, you agree to our terms of service and acknowledge you have read our privacy policy.
+
+
+
+
+
+
+
+Start asking to get answers
+Find the answer to your question by asking.
+Ask question
+
+
+
+
+Explore related questions
+pythonpytorch
+See similar questions with these tags.
+
+
+
+
+
+
+
+
+
+                            The Overflow Blog
+                        
+
+
+ 
+
+From training to inference: The new role of web data in LLMs
+
+
+
+
+ 
+
+Is AI a bubble or a revolution? The answer is yes.
+
+
+
+                            Featured on Meta
+                        
+
+
+ 
+
+Changes to reporting for the [status-review] escalation process
+
+
+
+
+ 
+
+Policy: Generative AI (e.g., ChatGPT) is banned
+
+
+
+
+ 
+
+A discussion about closed (and potentially useful) posts on Stack Overflow
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Related
+
+
+
+4
+
+pytorch loss value not change
+
+
+
+0
+
+PyTorch: Loss remains constant
+
+
+
+10
+
+Having issues with neural network training. Loss not decreasing
+
+
+
+12
+
+Loss doesn't decrease in Pytorch CNN
+
+
+
+1
+
+Pytorch tutorial loss is not decreasing as expected
+
+
+
+3
+
+PyTorch: why is the loss unchanging, in this simple example?
+
+
+
+1
+
+Pytorch CNN loss is not changing,
+
+
+
+7
+
+Validation loss is neither increasing or decreasing
+
+
+
+0
+
+The loss value does not decrease
+
+
+
+7
+
+Pytorch loss is nan
+
+
+
+
+
+
+
+            Hot Network Questions
+        
+
+
+
+
+                    Is there an R function to calculate row sums using a range/window of column indices?
+                
+
+
+
+                    Is nirvana not extinction?
+                
+
+
+
+                    Primality and the GCD of Stirling number of the second kind.
+                
+
+
+
+                    Why aren't Trump's reciprocal tariffs reciprocal?
+                
+
+
+
+                    How the Rectocrus walks
+                
+
+
+
+                    How do I remove the leading digit in a formula?
+                
+
+
+
+                    Geometry node, trim curve, trimming in segments, not continuous
+                
+
+
+
+                    Playing with the thumb and the other fingers alternately on the guitar
+                
+
+
+
+                    Term for a book that is dedicated to listing other books about a certain topic
+                
+
+
+
+                    What was the significance, nationally, of the 2025 Wisconsin Supreme Court race?
+                
+
+
+
+                    Why isn't Krishna's deceit considered adharma?
+                
+
+
+
+                    A citation for using mixed models for technical replicates
+                
+
+
+
+                    How does Calvinism explain Paul and Silas' response to the Philippian jailer and the "persuading" of men?
+                
+
+
+
+                    Can using swearwords at a conference be acceptable?
+                
+
+
+
+                    Why doesn't the Cosmic Microwave Background have a more complex spectrum?
+                
+
+
+
+                    Are these concrete steps fixable?
+                
+
+
+
+                    How did the Trump Administration come up with the "tariffs charged to the US" percentages? (E.g. Lesotho charges US 99%, Madagascar charges US 93%)
+                
+
+
+
+                    Python Exception Monitor
+                
+
+
+
+                    The Cutting Room Floor
+                
+
+
+
+                    Do tariffs apply to imported components installed in exported products?
+                
+
+
+
+                    Are astronauts permitted to listen to music during their daily exercise?
+                
+
+
+
+                    Why does K&R say that pointers are preferable to arrays as function parameters?
+                
+
+
+
+                    When only three sides are shown, can a Rubik's Cube be impossible?
+                
+
+
+
+                    What is willful blindness?
+                
+
+
+
+            more hot questions
+        
+
+
+
+
+            Question feed
+        
+
+
+
+
+                Subscribe to RSS
+            
+
+
+
+                        Question feed
+                        To subscribe to this RSS feed, copy and paste this URL into your RSS reader.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+lang-py
+
+
+

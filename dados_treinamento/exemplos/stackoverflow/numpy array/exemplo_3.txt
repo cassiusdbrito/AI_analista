@@ -1,0 +1,1034 @@
+
+
+Tensorflow model training, List to numpy array conversion unevenly changes the shape of data
+
+
+
+        Ask Question
+    
+
+
+
+
+
+Asked
+1 month ago
+
+
+Modified
+13 days ago
+
+
+Viewed
+                        65 times
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0        
+
+
+
+
+
+
+
+
+
+
+
+
+
+I am trying to predict LSDC from MRI images. For each study_id there are multiple images. Each study_id represents each patient. I want to predict 3 level of severity for 5 conditions on 5 levels.
+I am trying to create dataset using custom data generator using Sequence class from tensorflow.
+Here is my Datagenerator class:
+ class CustomDataGenerator(Sequence):
+    def __init__(self, image_dict, num_img, labels_dict=None, batch_size=8, image_size=(224, 224), shuffle=True):
+       self.image_dict = image_dict
+       self.labels_dict = labels_dict
+       self.batch_size = batch_size
+       self.image_size = image_size
+       self.shuffle = shuffle
+       self.ids = list(image_dict.keys())
+       self.num_img = num_img
+       self.on_epoch_end()
+
+    def __len__(self):
+       return int(np.floor(len(self.ids) / self.batch_size))
+
+    def __getitem__(self, index):
+       start = index * self.batch_size
+       end = min((index + 1) * self.batch_size, len(self.ids))
+       batch_ids = self.ids[start:end]
+       batch_images = []
+       batch_labels = []
+
+       for id_ in batch_ids:
+           images = []
+
+           for image_path in self.image_dict.get(id_, []):
+               dicomdata = pydicom.dcmread(image_path)
+               image = dicomdata.pixel_array
+               image = cv2.resize(image, self.image_size)
+               image = np.expand_dims(image, axis=-1)
+               image = image.astype('float32') / np.max(image)
+               image = np.repeat(image, 3, axis=-1)
+               images.append(image)
+
+           images = np.array(images)
+
+           if len(images) < self.num_img:
+               pad_amount = self.num_img - len(images)
+               padding = [(0, pad_amount)] + [(0, 0)] * (len(images.shape) - 1)
+               images = np.pad(images, padding, mode='constant')
+
+           batch_images.append(images)
+
+           if self.labels_dict:
+               label = np.array(self.labels_dict.get(id_), dtype=np.float32)
+               batch_labels.append(label)
+
+       batch_images = np.stack(batch_images)
+       if self.labels_dict:
+           batch_labels = np.array(batch_labels, dtype=np.float32)
+           return batch_images, batch_labels
+
+       return batch_images
+
+    def on_epoch_end(self):
+       if self.shuffle:
+           np.random.shuffle(self.ids)
+
+My labels dictionary is as follows:
+    for i, sid in enumerate(train_df['study_id']):
+        labels_dict[str(sid)] = []
+        for con in conditions:
+            if train_df.loc[i, con] == 'normal_mild':
+                labels_dict[str(sid)].append([1, 0, 0])
+            elif train_df.loc[i, con] == 'severe':
+                labels_dict[str(sid)].append([0, 0, 1])
+            else:
+                labels_dict[str(sid)].append([0, 1, 0])
+
+       labels_dict[str(sid)] = np.array(labels_dict[str(sid)], dtype=np.float32)
+
+I have tried various ways to convert labels_dict to numpy array. But either at the time of training it shows shape mismatch error. Or when trying to see the data it showed error.
+This is the error it shows:
+----> 1 model.fit(train_generator, epochs=2) #, steps_per_epoch=len(train_generator)//8)
+
+/usr/local/lib/python3.10/dist-packages/keras/src/utils/traceback_utils.py in error_handler(*args, **kwargs)
+    120             # To get the full stack trace, call:
+    121             # `keras.config.disable_traceback_filtering()`
+--> 122             raise e.with_traceback(filtered_tb) from None
+    123         finally:
+    124             del filtered_tb
+
+<ipython-input-12-cf42609bddda> in __getitem__(self, index)
+     47         batch_images = np.stack(batch_images)
+     48         if self.labels_dict:
+---> 49             batch_labels = np.array(batch_labels, dtype=np.float32)
+     50             return batch_images, batch_labels
+     51 
+
+ValueError: setting an array element with a sequence. The requested array has an inhomogeneous shape after 1 dimensions. The detected shape was (8,) + inhomogeneous part.
+
+I tried using np.stack or batch_labels = batch_labels.reshape((batch_labels.shape[0], len(conditions), 3)), but it shows different error. My data does not have any nan and all labels_dict is of shape (batch_size, num_of_condition, severity_class). Even when I tried printing the data from generator. Generator data shape from data_x, data_y = next(iter(train_generator)) show desired shape of data for model input and output. I cannot figure out the problem.
+
+
+
+
+pythonnumpytensorflowmachine-learningdata-generation
+
+
+
+
+
+
+
+
+
+Share
+
+
+Improve this question
+
+
+
+                        Follow
+                        
+
+
+
+
+
+
+
+
+
+
+edited Mar 22 at 18:28
+
+
+
+
+
+
+marc_s
+
+756k184184 gold badges1.4k1.4k silver badges1.5k1.5k bronze badges
+
+
+
+
+
+
+
+
+            asked Feb 20 at 17:02
+
+
+
+
+
+
+Kazi Md Abdullah Al MubinKazi Md Abdullah Al Mubin
+
+122 bronze badges
+
+
+
+
+
+
+
+5
+
+
+
+
+
+
+
+
+
+
+What's the shape (or len) of each element in batch_labels?  Verify the dtype as well. This 'inhomogeneous' error tells us that something does not match, and it cannot make a regular float array.
+
+– hpaulj
+
+
+Commented
+Feb 20 at 18:31
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Does the stack error tell you/us any more about the problem?
+
+– hpaulj
+
+
+Commented
+Feb 20 at 21:02
+
+
+
+
+
+
+
+
+
+
+
+@hpaulj each element in batch_labelscontains a lists of lists. Shape of that is (8,25,3). Here 8 is batch size, 25 is number of conditions and 3 is the severity level. So basically each element is like [[[1,0,0]*25]*8]. Confusing thing is when I printed elements from train_generator by calling next(iter(train_generator)) there was no nan values in there.
+
+– Kazi Md Abdullah Al Mubin
+
+
+Commented
+Feb 21 at 4:42
+
+
+
+
+
+
+
+
+
+
+
+@hpaulj When I used np.stack() it was just before returning the labels and images. Befor the np.stack, I converted the labels list to np.array. At that time it was showing this conversion cannot be done and due to shape or value problem.
+
+– Kazi Md Abdullah Al Mubin
+
+
+Commented
+Feb 21 at 4:46
+
+
+
+
+
+
+
+
+
+
+
+Why the talk of nan values?  The error is about shapes.
+
+– hpaulj
+
+
+Commented
+Feb 21 at 21:48
+
+
+
+
+
+
+
+Add a comment
+ | 
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+                                        1 Answer
+                                    1
+
+
+
+
+
+
+            Sorted by:
+        
+
+            Reset to default
+        
+
+
+
+
+                        Highest score (default)
+                    
+
+                        Trending (recent votes count more)
+                    
+
+                        Date modified (newest first)
+                    
+
+                        Date created (oldest first)
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+A list arrays of differing sizes will produce your error message:
+In [8]: alist = [np.array([1,2]), np.array([3,4]), np.array([5,6,7])]
+
+In [9]: alist
+Out[9]: [array([1, 2]), array([3, 4]), array([5, 6, 7])]
+
+In [10]: np.array(alist)
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+Cell In[10], line 1
+----> 1 np.array(alist)
+
+ValueError: setting an array element with a sequence. The requested array has an inhomogeneous shape after 1 dimensions. The detected shape was (3,) + inhomogeneous part.
+
+stack applied to the same list produces a different message:
+In [11]: np.stack(alist)
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+Cell In[11], line 1
+----> 1 np.stack(alist)
+
+File ~\miniconda3\envs\mypy\Lib\site-packages\numpy\_core\shape_base.py:460, in stack(arrays, axis, out, dtype, casting)
+    458 shapes = {arr.shape for arr in arrays}
+    459 if len(shapes) != 1:
+--> 460     raise ValueError('all input arrays must have the same shape')
+    462 result_ndim = arrays[0].ndim + 1
+    463 axis = normalize_axis_index(axis, result_ndim)
+
+ValueError: all input arrays must have the same shape
+
+Applied to a correct list:
+In [12]: alist = [np.array([1,2]), np.array([3,4]), np.array([5,6])]
+
+In [13]: np.array(alist)
+Out[13]: 
+array([[1, 2],
+       [3, 4],
+       [5, 6]])
+
+In [14]: np.stack(alist)
+Out[14]: 
+array([[1, 2],
+       [3, 4],
+       [5, 6]])
+
+If the number of conditions is variable, your batch_labels list could be something like
+In [16]: alist = [np.array([]), np.array([[1,2]]), np.array([[3,4],[5,6]])]
+
+In [17]: alist
+Out[17]: 
+[array([], dtype=float64),   # 0 conditions
+ array([[1, 2]]),            # 1
+ array([[3, 4],              # 2 conditions
+        [5, 6]])]
+
+In [18]: [i.shape for i in alist]
+Out[18]: [(0,), (1, 2), (2, 2)]
+
+In [19]: np.array(alist)
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+Cell In[19], line 1
+----> 1 np.array(alist)
+
+ValueError: setting an array element with a sequence. The requested array has an inhomogeneous shape after 1 dimensions. The detected shape was (3,) + inhomogeneous part.
+
+
+
+
+
+
+
+
+
+Share
+
+
+Improve this answer
+
+
+
+                        Follow
+                        
+
+
+
+
+
+
+
+
+
+
+edited Feb 21 at 22:02
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            answered Feb 21 at 21:49
+
+
+
+
+
+
+hpauljhpaulj
+
+232k1414 gold badges255255 silver badges381381 bronze badges
+
+
+
+
+
+
+
+0
+
+
+
+
+
+
+Add a comment
+ | 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                    Your Answer
+                                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Thanks for contributing an answer to Stack Overflow!Please be sure to answer the question. Provide details and share your research!But avoid …Asking for help, clarification, or responding to other answers.Making statements based on opinion; back them up with references or personal experience.To learn more, see our tips on writing great answers.
+
+
+
+
+
+
+Draft saved
+Draft discarded
+
+
+
+
+
+
+
+
+
+
+Sign up or log in
+
+
+ Sign up using Google
+                        
+
+ Sign up using Email and Password
+                        
+
+
+
+Submit
+
+Post as a guest
+
+
+Name
+
+
+
+
+
+
+
+
+
+Email
+Required, but never shown
+
+
+
+
+
+
+
+
+
+
+
+
+Post as a guest
+
+
+Name
+
+
+
+
+
+
+
+
+
+Email
+Required, but never shown
+
+
+
+
+
+
+
+
+
+
+
+                                            Post Your Answer
+                                        
+
+                                            Discard
+                                        
+
+                                                By clicking “Post Your Answer”, you agree to our terms of service and acknowledge you have read our privacy policy.
+
+
+
+
+
+
+
+Start asking to get answers
+Find the answer to your question by asking.
+Ask question
+
+
+
+
+Explore related questions
+pythonnumpytensorflowmachine-learningdata-generation
+See similar questions with these tags.
+
+
+
+
+
+
+
+
+
+                            The Overflow Blog
+                        
+
+
+ 
+
+From training to inference: The new role of web data in LLMs
+
+
+
+
+ 
+
+Is AI a bubble or a revolution? The answer is yes.
+
+
+
+                            Featured on Meta
+                        
+
+
+ 
+
+Changes to reporting for the [status-review] escalation process
+
+
+
+
+ 
+
+Policy: Generative AI (e.g., ChatGPT) is banned
+
+
+
+
+ 
+
+A discussion about closed (and potentially useful) posts on Stack Overflow
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Related
+
+
+
+915
+
+How do I print the full NumPy array, without truncation?
+
+
+
+346
+
+Convert a tensor to numpy array in Tensorflow?
+
+
+
+684
+
+How do I access the ith column of a NumPy multidimensional array?
+
+
+
+672
+
+Is there a NumPy function to return the first index of something in an array?
+
+
+
+575
+
+How do I read CSV data into a record array in NumPy?
+
+
+
+437
+
+Convert NumPy array to Python list
+
+
+
+273
+
+List of lists into numpy array
+
+
+
+401
+
+What is the difference between ndarray and array in NumPy?
+
+
+
+440
+
+Creating a Pandas DataFrame from a Numpy array: How do I specify the index column and column headers?
+
+
+
+223
+
+Unable to allocate array with shape and data type
+
+
+
+
+
+
+
+            Hot Network Questions
+        
+
+
+
+
+                    Should we call .mp3, mpeg, mp4, etc are a kind of source coding in telecommunications?
+                
+
+
+
+                    Did Trump make legal changes to the U.S. DV Lottery program?
+                
+
+
+
+                    Compile with List of Variables
+                
+
+
+
+                    Intune Applocker and unsigned .tmp files
+                
+
+
+
+                    When only three sides are shown, can a Rubik's Cube be impossible?
+                
+
+
+
+                    History of invariant types in model theory
+                
+
+
+
+                    Is it normal that a professor in a class I am taking asks to design a graduate course in return of 40% of the course grades?
+                
+
+
+
+                    If the Jews gave birth to six at a time in Mitzrayim, why was Moshe born alone?
+                
+
+
+
+                    Stuck bit in a ROM data bus, any method to avoid to desolder all memories connected to that line?
+                
+
+
+
+                    When measuring leakage inductance using the short method, are you measuring the sum of the primary and reflected secondary, or just the primary?
+                
+
+
+
+                    Drill flat 1-inch countersink hole in steel using drill press
+                
+
+
+
+                    Are astronauts permitted to listen to music during their daily exercise?
+                
+
+
+
+                    Can using swearwords at a conference be acceptable?
+                
+
+
+
+                    Issue with placing arrow inside circle
+                
+
+
+
+                    How the Rectocrus walks
+                
+
+
+
+                    Is the new heavenly Jerusalem a cube or a pyramid? Rev.21:16
+                
+
+
+
+                    How to make the lstlisting highlight keywords
+                
+
+
+
+                    Why doesn't the Cosmic Microwave Background have a more complex spectrum?
+                
+
+
+
+                    On the input stage of an oscilloscope sampling circuit
+                
+
+
+
+                    Fixing Math display issue
+                
+
+
+
+                    RS485 Internal circuit
+                
+
+
+
+                    How can I easily find out what caused some amount to end up on a 1099-MISC as "Other income" at Interactive Brokers?
+                
+
+
+
+                    Why wasn't freezing Kane considered a viable option by the Nostromo crew for dealing with the facehugger in "Alien"?
+                
+
+
+
+                    How to use magic in your story without it burning your plot?
+                
+
+
+
+            more hot questions
+        
+
+
+
+
+            Question feed
+        
+
+
+
+
+                Subscribe to RSS
+            
+
+
+
+                        Question feed
+                        To subscribe to this RSS feed, copy and paste this URL into your RSS reader.
+
+
+
+
+
+
+
+
+
+
+
+
+

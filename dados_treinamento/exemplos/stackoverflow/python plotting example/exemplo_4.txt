@@ -1,0 +1,534 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0        
+
+
+
+
+
+
+
+
+
+
+
+
+
+The matplotlib documentation 
+https://matplotlib.org/gallery/lines_bars_and_markers/simple_plot.html
+provides the following example code
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Data for plotting
+t = np.arange(0.0, 2.0, 0.01)
+s = 1 + np.sin(2 * np.pi * t)
+
+fig, ax = plt.subplots()
+ax.plot(t, s)
+
+ax.set(xlabel='time (s)', ylabel='voltage (mV)',
+       title='About as simple as it gets, folks')
+ax.grid()
+
+fig.savefig("test.png")
+plt.show()
+
+to produce the following plot
+
+The exact same plot can be produced with the following code
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+t = np.arange(0.0, 2.0, 0.01)
+s = 1 + np.sin(2 * np.pi * t)
+plt.plot(t,s)
+plt.grid(True)
+plt.xlabel('time (s)')
+plt.ylabel('voltage (mV)')
+plt.title('About as simple as it gets, folks')
+plt.savefig("test.png")
+plt.show()
+
+which makes no use of subplot, ax, or fig.
+I learned how to plot using the second approach. I've stumbled upon the first approach only recently
+and although I can kind of imagine what it's doing, it does seem far less intuitive than the second approach.
+Can somebody explain the rational behind the first approach as it seems to complicate something very simple?
+
+
+
+
+pythonmatplotlibsubplot
+
+
+
+
+
+
+
+
+
+Share
+
+
+Improve this question
+
+
+
+                        Follow
+                        
+
+
+
+
+
+
+
+
+
+
+            asked Nov 5, 2018 at 4:53
+
+
+
+
+
+
+redwood_gmredwood_gm
+
+36333 silver badges1111 bronze badges
+
+
+
+
+
+
+
+1
+
+
+
+
+
+
+
+
+
+
+If I'm making several figures, each with multiple axes objects, I would rather explicitly and directly operate on objects (fig and ax) than hope the pyplot state machine is correctly reading my mind.
+
+– Paul H
+
+
+Commented
+Nov 5, 2018 at 6:16
+
+
+
+
+
+
+
+
+
+
+Add a comment
+ | 
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+                                        1 Answer
+                                    1
+
+
+
+
+
+
+            Sorted by:
+        
+
+            Reset to default
+        
+
+
+
+
+                        Highest score (default)
+                    
+
+                        Trending (recent votes count more)
+                    
+
+                        Date modified (newest first)
+                    
+
+                        Date created (oldest first)
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+The pyplot approach may look more intuitive at first sight indeed. And of course that is to a large extent subjective. So feel free to use it if it suits your needs. 
+pyplot is a so-called state machine. It will operate on the "current figure" and "current axes". However, it will then, like in the first case, call the respective methods of the current objects. E.g. plt.plot(...) will just call ax = plt.gca(); ax.plot(...) internally anyways. So one might decide to directly work with the objects in question, instead of relying on pyplot to find those. 
+Also, pyplot does not expose matplotlib's complete functionality. E.g. if you want to create a formatter for your ticklabels, you will need to use the object oriented interface anyways, 
+plt.gca().xaxis.set_major_formatter(...)
+
+in which case one might also be tempted to directly have an axes ax at one's disposal to work on
+ax.xaxis.set_major_formatter(...)
+
+Equally if you want to write a function to plot something to an axes, you might let this function take the axes object as input
+def myplot(ax, data, **kwargs):
+    ax.plot(data, label = "My plot", **kwargs)
+    ax.set_title("My plot")
+    ax.legend()
+
+Then reusing such function on any axes is pretty handy. Maybe you have a single figure with an axes to plot to, 
+fig, ax = plt.subplots()
+myplot(ax, data)
+
+or you have several axes in different figures
+fig1, (ax1, ax2) = plt.subplots(ncols=2)
+fig2, (ax3, ax4) = plt.subplots(ncols=2)
+myplot(ax2, data2)
+myplot(ax4, data3)
+
+There are also cases, where you don't want to use pyplot at all, e.g. when embedding your plot into a GUI, in which case you'd need to use a structure like
+fig = matplotlib.figure.Figure()
+canvas = FigureCanvasQT(fig)
+axes = fig.subplots(2,3)
+axes[0,1].plot(...)
+
+Finally, it should be noted that a lot of issues that people ask about here on Stackoverflow directly result from pyplot being used instead of the object-oriented approach. That's not to say, you shouldn't use it, but in overall terms it seems like pyplot increases the chances for shooting yourself in the foot if you don't pay maximum attention to what the "current axes" is while working with pyplot.
+Due to all of the above, matplotlib came to the conclusion that it's best to advocate using the object-oriented approach, even though it might, for very simple examples like the ones from the question, be less straight forward to use. Even if not using the object oriented style, understanding it is somehow a prerequisite of using matplotlib even for midly complex plots.
+
+
+
+
+
+
+
+
+Share
+
+
+Improve this answer
+
+
+
+                        Follow
+                        
+
+
+
+
+
+
+
+
+
+
+            answered Nov 5, 2018 at 12:02
+
+
+
+
+
+
+ImportanceOfBeingErnestImportanceOfBeingErnest
+
+340k6060 gold badges732732 silver badges762762 bronze badges
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Add a comment
+ | 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                    Your Answer
+                                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Thanks for contributing an answer to Stack Overflow!Please be sure to answer the question. Provide details and share your research!But avoid …Asking for help, clarification, or responding to other answers.Making statements based on opinion; back them up with references or personal experience.To learn more, see our tips on writing great answers.
+
+
+
+
+
+
+Draft saved
+Draft discarded
+
+
+
+
+
+
+
+
+
+
+Sign up or log in
+
+
+ Sign up using Google
+                        
+
+ Sign up using Email and Password
+                        
+
+
+
+Submit
+
+Post as a guest
+
+
+Name
+
+
+
+
+
+
+
+
+
+Email
+Required, but never shown
+
+
+
+
+
+
+
+
+
+
+
+
+Post as a guest
+
+
+Name
+
+
+
+
+
+
+
+
+
+Email
+Required, but never shown
+
+
+
+
+
+
+
+
+
+
+
+                                            Post Your Answer
+                                        
+
+                                            Discard
+                                        
+
+                                                By clicking “Post Your Answer”, you agree to our terms of service and acknowledge you have read our privacy policy.
+
+
+
+
+
+
+
+Start asking to get answers
+Find the answer to your question by asking.
+Ask question
+
+
+
+
+Explore related questions
+pythonmatplotlibsubplot
+See similar questions with these tags.
+
+
+
+

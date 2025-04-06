@@ -1,0 +1,72 @@
+
+
+More flexibility is offered with scatter() call where you can change marker style, size and color more intuitively (e.g. D for diamond).
+x = [1,2,3,4,5,6]
+y = [3,4,5,6,7,8]
+
+plt.scatter(x[1:], y[1:], c='blue')
+plt.scatter(x[0], y[0], c='red', marker='D', s=100);
+
+
+# you can even write text as a marker
+plt.scatter(x[0], y[0], c='red', marker=r'$\tau$', s=100);
+
+
+If the point to highlight is not the first point, then a filtering mask might be useful. For example, the following code highlights the third point.
+plt.scatter(*zip(*(xy for i, xy in enumerate(zip(x, y)) if i!=2)), marker=6)
+plt.scatter(x[2], y[2], c='red', marker=7, s=200);
+
+Perhaps, the filtering is simpler with numpy.
+data = np.array([x, y])                                # construct a single 2d array
+plt.scatter(*data[:, np.arange(len(x))!=2], marker=6)  # plot all except the third point
+plt.scatter(*data[:, 2], c='red', marker=7, s=200);    # plot the third point
+
+
+As a side note, you can find the full dictionary of marker styles here or by matplotlib.markers.MarkerStyle.markers.
+# a dictionary of marker styles
+from matplotlib.markers import MarkerStyle
+MarkerStyle.markers
+
+
+
+
+
+
+
+
+
+Share
+
+
+Improve this answer
+
+
+
+                        Follow
+                        
+
+
+
+
+
+
+
+
+
+
+            answered May 5, 2023 at 8:59
+
+
+
+
+
+
+cottontailcottontail
+
+23.9k2525 gold badges168168 silver badges163163 bronze badges
+
+
+
+
+
+

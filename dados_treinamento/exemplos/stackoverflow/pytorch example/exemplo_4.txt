@@ -1,0 +1,560 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1        
+
+
+
+
+
+
+
+
+
+
+
+
+
+I am just starting to try and learn pytorch and am finding it frustrating regardless of how it is advertised :)
+Here I am running a simple regression as an experiment but since the loss doesn't seem to be decreasing with each epoch (on the training) I must be doing something wrong -- either in training or how I am collecting the MSE?
+from __future__ import division
+import numpy as np
+import matplotlib.pyplot as plt
+
+import torch
+import torch.utils.data as utils_data
+from torch.autograd import Variable
+from torch import optim, nn
+from torch.utils.data import Dataset 
+import torch.nn.functional as F
+
+from sklearn.datasets import load_boston
+
+
+cuda=True
+
+
+#regular old numpy
+boston = load_boston()
+
+x=boston.data
+y=boston.target
+
+x.shape
+
+training_samples = utils_data.TensorDataset(x, y)
+data_loader = utils_data.DataLoader(training_samples, batch_size=10)
+
+len(data_loader) #number of batches in an epoch
+
+#override this
+class Net(nn.Module):
+    def __init__(self):
+         super(Net, self).__init__()
+
+         #all the layers
+         self.fc1   = nn.Linear(x.shape[1], 50)
+         self.drop = nn.Dropout(p=0.2)
+         self.fc2   = nn.Linear(50, 1)
+
+    #    
+    def forward(self, x):
+        x = F.relu(self.fc1(x))
+        x = self.drop(x)
+        x = self.fc2(x)
+
+        return x
+
+
+
+net=Net()
+if cuda:
+    net.cuda()
+print(net)
+
+# create a stochastic gradient descent optimizer
+optimizer = optim.Adam(net.parameters())
+# create a loss function (mse)
+loss = nn.MSELoss()
+
+# create a stochastic gradient descent optimizer
+optimizer = optim.Adam(net.parameters())
+# create a loss function (mse)
+loss = nn.MSELoss()
+
+# run the main training loop
+epochs =20
+hold_loss=[]
+
+for epoch in range(epochs):
+    cum_loss=0.
+    for batch_idx, (data, target) in enumerate(data_loader):
+        tr_x, tr_y = Variable(data.float()), Variable(target.float())
+        if cuda:
+            tr_x, tr_y = tr_x.cuda(), tr_y.cuda() 
+
+        # Reset gradient
+        optimizer.zero_grad()
+
+        # Forward pass
+        fx = net(tr_x)
+        output = loss(fx, tr_y) #loss for this batch
+        cum_loss += output.data[0] 
+
+        # Backward 
+        output.backward()
+
+        # Update parameters based on backprop
+        optimizer.step()
+    hold_loss.append(cum_loss)    
+    #print(epoch+1, cum_loss) #
+
+plt.plot(np.array(hold_loss))
+
+
+
+
+
+
+pythonpytorch
+
+
+
+
+
+
+
+
+
+Share
+
+
+Improve this question
+
+
+
+                        Follow
+                        
+
+
+
+
+
+
+
+
+
+
+edited Feb 8, 2018 at 20:51
+
+
+
+
+
+
+cmaher
+
+5,23511 gold badge2323 silver badges3434 bronze badges
+
+
+
+
+
+
+
+
+            asked Feb 8, 2018 at 0:27
+
+
+
+
+
+
+B_MinerB_Miner
+
+1,83255 gold badges3636 silver badges7070 bronze badges
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Add a comment
+ | 
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+                                        1 Answer
+                                    1
+
+
+
+
+
+
+            Sorted by:
+        
+
+            Reset to default
+        
+
+
+
+
+                        Highest score (default)
+                    
+
+                        Trending (recent votes count more)
+                    
+
+                        Date modified (newest first)
+                    
+
+                        Date created (oldest first)
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Well I just changed the line:
+training_samples = utils_data.TensorDataset(torch.from_numpy(x), torch.from_numpy(y))
+
+Adding the torch.from_numpy (otherwise, it was throwing an error, thus nor running) and I get a learning curve that looks something like this:
+
+
+
+
+
+
+
+
+
+Share
+
+
+Improve this answer
+
+
+
+                        Follow
+                        
+
+
+
+
+
+
+
+
+
+
+            answered Feb 8, 2018 at 8:26
+
+
+
+
+
+
+Manuel LagunasManuel Lagunas
+
+2,7612222 silver badges3232 bronze badges
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Add a comment
+ | 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                    Your Answer
+                                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Thanks for contributing an answer to Stack Overflow!Please be sure to answer the question. Provide details and share your research!But avoid …Asking for help, clarification, or responding to other answers.Making statements based on opinion; back them up with references or personal experience.To learn more, see our tips on writing great answers.
+
+
+
+
+
+
+Draft saved
+Draft discarded
+
+
+
+
+
+
+
+
+
+
+Sign up or log in
+
+
+ Sign up using Google
+                        
+
+ Sign up using Email and Password
+                        
+
+
+
+Submit
+
+Post as a guest
+
+
+Name
+
+
+
+
+
+
+
+
+
+Email
+Required, but never shown
+
+
+
+
+
+
+
+
+
+
+
+
+Post as a guest
+
+
+Name
+
+
+
+
+
+
+
+
+
+Email
+Required, but never shown
+
+
+
+
+
+
+
+
+
+
+
+                                            Post Your Answer
+                                        
+
+                                            Discard
+                                        
+
+                                                By clicking “Post Your Answer”, you agree to our terms of service and acknowledge you have read our privacy policy.
+
+
+
+
+
+
+
+Start asking to get answers
+Find the answer to your question by asking.
+Ask question
+
+
+
+
+Explore related questions
+pythonpytorch
+See similar questions with these tags.
+
+
+
+

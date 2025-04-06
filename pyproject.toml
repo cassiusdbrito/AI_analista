@@ -19,6 +19,8 @@ seaborn = "^0.13.0"
 accelerate = "^0.25.0"
 bitsandbytes = "^0.41.0"
 bs4 = "^0.0.2"
+selenium = "^4.30.0"
+pyautogui = "^0.9.54"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"

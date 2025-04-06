@@ -1,0 +1,1065 @@
+
+
+
+
+
+
+
+Matplotlib Plot Not Responding in VSCode Debug Mode
+
+
+
+        Ask Question
+    
+
+
+
+
+
+Asked
+8 months ago
+
+
+Modified
+1 month ago
+
+
+Viewed
+                        1k times
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6        
+
+
+
+
+
+
+
+
+
+
+
+
+
+I'm encountering an issue when trying to plot a simple graph using Matplotlib in Python while in debug mode in VSCode. The plot works perfectly in normal execution mode, but when I set a breakpoint and run the code in debug mode, the plot window becomes unresponsive.
+Example Code:
+import matplotlib.pyplot as plt
+
+# Sample data
+x = [1, 2, 3, 4, 5]
+y = [10, 20, 25, 30, 40]
+
+# Plotting the data
+plt.plot(x, y)
+plt.title('Sample Plot')
+plt.xlabel('x-axis')
+plt.ylabel('y-axis')
+
+# Show plot
+plt.show()
+
+In normal execution mode, the plot window appears and is responsive.
+In debug mode with a breakpoint, the plot window appears but becomes unresponsive and eventually throws a "not responding" error.
+
+I tried using different Matplotlib backends, but none of them resolved the issue.
+I expect to be able to plot graphs using Matplotlib in debug mode vscode without the plot window becoming unresponsive.
+
+
+
+
+pythonmatplotlibvisual-studio-code
+
+
+
+
+
+
+
+
+
+Share
+
+
+Improve this question
+
+
+
+                        Follow
+                        
+
+
+
+
+
+
+
+
+
+
+            asked Jul 25, 2024 at 16:12
+
+
+
+
+
+
+sajadsajad
+
+10366 bronze badges
+
+
+
+
+
+
+
+1
+
+
+
+
+
+
+
+
+
+
+Can you try to add plt.pause(0.1)  # Add a small pause above plt.show()? By the way, Jupyter can run matplotlib perfectly.
+
+– MingJie-MSFT
+
+
+Commented
+Jul 26, 2024 at 2:18
+
+
+
+
+
+
+
+Add a comment
+ | 
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+                                        3 Answers
+                                    3
+
+
+
+
+
+
+            Sorted by:
+        
+
+            Reset to default
+        
+
+
+
+
+                        Highest score (default)
+                    
+
+                        Trending (recent votes count more)
+                    
+
+                        Date modified (newest first)
+                    
+
+                        Date created (oldest first)
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+11        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+I also had this issue. I got it working again by running Python 3.11.9 instead of 3.12.*, and I also had to switch to matplotlib 3.8.3 instead of 3.9.*. Has been driving me crazy for a couple weeks. So, try setting up a virtual environment in VSCode with matplotlib 3.8.3 and switching your interpreter to 3.11.9 in that environment.
+
+
+
+
+
+
+
+
+Share
+
+
+Improve this answer
+
+
+
+                        Follow
+                        
+
+
+
+
+
+
+
+
+
+
+            answered Aug 9, 2024 at 14:33
+
+
+
+
+
+
+MatplotlibsadnessMatplotlibsadness
+
+12611 silver badge22 bronze badges
+
+
+
+
+
+
+
+5
+
+
+
+
+
+
+
+
+
+
+this is crazy! any solution for python 3.12.5?
+
+– Rime
+
+
+Commented
+Aug 31, 2024 at 6:53
+
+
+
+
+
+
+
+
+
+
+
+Is this a known issue? I was curious about the final solution
+
+– Petermailpan
+
+
+Commented
+Oct 16, 2024 at 12:28
+
+
+
+
+
+
+
+
+
+
+
+thank you, matplotlib version 3.8.3 works for me and my python version is 3.10.15 in case the problem relates with the python version.
+
+– Mingming
+
+
+Commented
+Oct 18, 2024 at 8:06
+
+
+
+
+
+
+
+
+
+
+1
+
+
+
+
+Thanks, this helped a bunch. I was able to get matplotlib 3.8.2, 3.8.3, and 3.8.4 and Python 3.12 working together to plot in the debugger.  The problem exists for me with 3.9.* and python 3.12 and python 3.13.0 I was not able to get 3.8.* and python 3.13.0 to install.  The problem exists for me with at least 3.9.2 and python 3.13.0 even after bypassing the tcl error per: stackoverflow.com/questions/29320039/…  So it definitely looks like a matplotlib 3.9 issue not a python 3.12 issue.
+
+– Dr Sank
+
+
+Commented
+Nov 11, 2024 at 20:37
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Clarification, works for me with both Python 3.12.0 and 3.12.7 but did not try the versions in the middle.
+
+– Dr Sank
+
+
+Commented
+Nov 11, 2024 at 21:13
+
+
+
+
+
+
+
+Add a comment
+ | 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+As of today, I was able to display my plot while running in the debugger when I called plt.show() on the debug console with a breakpoint in my plotting code.
+My versions of stuff:
+
+Python 3.12.4
+Matplotlib 3.10.0
+VS Code 1.97.1
+Python VS Code extension 2025.0.0
+
+
+
+
+
+
+
+
+
+Share
+
+
+Improve this answer
+
+
+
+                        Follow
+                        
+
+
+
+
+
+
+
+
+
+
+            answered Feb 12 at 15:19
+
+
+
+
+
+
+als0052als0052
+
+45455 silver badges1414 bronze badges
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Add a comment
+ | 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Yes, had this issue as well, but resolved (FINALLY) by reverting to Python 3.12.9 (from latest 3.13 release)
+
+Python 3.12.9
+VS Code 1.97.2
+VS Code Python Extension 2025.0.0
+Matplotlib 3.10.0
+
+
+
+
+
+
+
+
+
+Share
+
+
+Improve this answer
+
+
+
+                        Follow
+                        
+
+
+
+
+
+
+
+
+
+
+            answered Feb 22 at 15:26
+
+
+
+
+
+
+TJ_amsTJ_ams
+
+1111 bronze badge
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Add a comment
+ | 
+
+
+
+
+
+
+
+
+
+
+
+
+                                    Your Answer
+                                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Thanks for contributing an answer to Stack Overflow!Please be sure to answer the question. Provide details and share your research!But avoid …Asking for help, clarification, or responding to other answers.Making statements based on opinion; back them up with references or personal experience.To learn more, see our tips on writing great answers.
+
+
+
+
+
+
+Draft saved
+Draft discarded
+
+
+
+
+
+
+
+
+
+
+Sign up or log in
+
+
+ Sign up using Google
+                        
+
+ Sign up using Email and Password
+                        
+
+
+
+Submit
+
+Post as a guest
+
+
+Name
+
+
+
+
+
+
+
+
+
+Email
+Required, but never shown
+
+
+
+
+
+
+
+
+
+
+
+
+Post as a guest
+
+
+Name
+
+
+
+
+
+
+
+
+
+Email
+Required, but never shown
+
+
+
+
+
+
+
+
+
+
+
+                                            Post Your Answer
+                                        
+
+                                            Discard
+                                        
+
+                                                By clicking “Post Your Answer”, you agree to our terms of service and acknowledge you have read our privacy policy.
+
+
+
+
+
+
+
+Start asking to get answers
+Find the answer to your question by asking.
+Ask question
+
+
+
+
+Explore related questions
+pythonmatplotlibvisual-studio-code
+See similar questions with these tags.
+
+
+
+
+
+
+
+
+
+                            The Overflow Blog
+                        
+
+
+ 
+
+From training to inference: The new role of web data in LLMs
+
+
+
+
+ 
+
+Is AI a bubble or a revolution? The answer is yes.
+
+
+
+                            Featured on Meta
+                        
+
+
+ 
+
+Changes to reporting for the [status-review] escalation process
+
+
+
+
+ 
+
+Policy: Generative AI (e.g., ChatGPT) is banned
+
+
+
+
+ 
+
+A discussion about closed (and potentially useful) posts on Stack Overflow
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+Linked
+
+
+
+0
+
+Matplotlib not showing non-blocking plots
+
+
+
+19
+
+Trying to use Tkinter throws Tcl error "Can't find a usable init.tcl"
+
+
+
+
+Related
+
+
+
+931
+
+How to change the font size on a matplotlib plot
+
+
+
+954
+
+How to make IPython notebook matplotlib plot inline
+
+
+
+4
+
+Python Matplotlib - how to set values on y axis in barchart
+
+
+
+2
+
+How to embed Python code with matplotlib in interactive mode into C?
+
+
+
+
+
+
+
+            Hot Network Questions
+        
+
+
+
+
+                    How to use magic in your story without it burning your plot?
+                
+
+
+
+                    Contrasting results about time intervals measured by stationary and moving observers: why?
+                
+
+
+
+                    Stuck bit in a ROM data bus, any method to avoid to desolder all memories connected to that line?
+                
+
+
+
+                    What is willful blindness?
+                
+
+
+
+                    Fixing Math display issue
+                
+
+
+
+                    How do I figure out what is inhibiting my screensaver and preventing lock screen/sleep?
+                
+
+
+
+                    Does it make sense to treat trade deficit as tariffs?
+                
+
+
+
+                    Mechanism of Guitar String Tuning: Tension, Length, and Material Properties
+                
+
+
+
+                    Can US employers run credit checks on new hires?
+                
+
+
+
+                    A citation for using mixed models for technical replicates
+                
+
+
+
+                    Simple Node.js version manager
+                
+
+
+
+                    Do people still follow Christian rituals upon graduation in the UK?
+                
+
+
+
+                    Do tariffs apply to imported components installed in exported products?
+                
+
+
+
+                    A group generated by an element and its conjugate must be solvable.
+                
+
+
+
+                    Issue with placing arrow inside circle
+                
+
+
+
+                    Why does double-clicking my .sh script open it in Vim instead of executing it, even after chmod +x?
+                
+
+
+
+                    Should we call .mp3, mpeg, mp4, etc are a kind of source coding in telecommunications?
+                
+
+
+
+                    mathematical metaphors in Alice's adventures
+                
+
+
+
+                    Is there an R function to calculate row sums using a range/window of column indices?
+                
+
+
+
+                    Is it normal that a professor in a class I am taking asks to design a graduate course in return of 40% of the course grades?
+                
+
+
+
+                    How to explain the Dirac matrices in physical-meaning terms?
+                
+
+
+
+                    Help identify this very early airplane, possibly filmed by Anthony Fokker circa 1905
+                
+
+
+
+                    Looking for connections between Parshas Tzav & Pesach
+                
+
+
+
+                    A cube somewhere around
+                
+
+
+
+            more hot questions
+        
+
+
+
+
+            Question feed
+        
+
+
+
+
+                Subscribe to RSS
+            
+
+
+
+                        Question feed
+                        To subscribe to this RSS feed, copy and paste this URL into your RSS reader.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+lang-py
+
+

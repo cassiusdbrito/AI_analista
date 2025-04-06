@@ -1,0 +1,92 @@
+
+
+The matplotlib documentation 
+https://matplotlib.org/gallery/lines_bars_and_markers/simple_plot.html
+provides the following example code
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Data for plotting
+t = np.arange(0.0, 2.0, 0.01)
+s = 1 + np.sin(2 * np.pi * t)
+
+fig, ax = plt.subplots()
+ax.plot(t, s)
+
+ax.set(xlabel='time (s)', ylabel='voltage (mV)',
+       title='About as simple as it gets, folks')
+ax.grid()
+
+fig.savefig("test.png")
+plt.show()
+
+to produce the following plot
+
+The exact same plot can be produced with the following code
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+t = np.arange(0.0, 2.0, 0.01)
+s = 1 + np.sin(2 * np.pi * t)
+plt.plot(t,s)
+plt.grid(True)
+plt.xlabel('time (s)')
+plt.ylabel('voltage (mV)')
+plt.title('About as simple as it gets, folks')
+plt.savefig("test.png")
+plt.show()
+
+which makes no use of subplot, ax, or fig.
+I learned how to plot using the second approach. I've stumbled upon the first approach only recently
+and although I can kind of imagine what it's doing, it does seem far less intuitive than the second approach.
+Can somebody explain the rational behind the first approach as it seems to complicate something very simple?
+
+
+
+
+pythonmatplotlibsubplot
+
+
+
+
+
+
+
+
+
+Share
+
+
+Improve this question
+
+
+
+                        Follow
+                        
+
+
+
+
+
+
+
+
+
+
+            asked Nov 5, 2018 at 4:53
+
+
+
+
+
+
+redwood_gmredwood_gm
+
+36333 silver badges1111 bronze badges
+
+
+
+
+
+
