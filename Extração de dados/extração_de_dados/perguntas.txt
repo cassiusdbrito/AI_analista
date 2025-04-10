@@ -1,0 +1,76 @@
+Como eu faço um grafico de barras com python? 
+Como eu faço a média da coluna de lucro da minha planilha "economia.xml" em pyhton?
+Como eu faço a variância da coluna de lucro da minha planilha "economia.xml" em pyhton?
+Como eu crio um gráfico de linha com os dados da minha planilha em Python?
+Como gerar um gráfico de pizza com matplotlib usando os dados da coluna "setor"?
+Como faço um gráfico de dispersão entre as colunas "lucro" e "investimento"?
+Como salvar um gráfico em formato PNG usando Python?
+Como adicionar título e legenda em um gráfico com matplotlib?
+Como calcular a média da coluna "despesas" da minha planilha "dados.xlsx"?
+Como faço o desvio padrão da coluna "vendas" no pandas?
+Como calcular a mediana da coluna "salários" usando Python?
+Como saber o valor máximo e mínimo da coluna "clientes"?
+Como normalizar os valores da coluna "preços"?
+Como eu leio uma planilha CSV com pandas?
+Como converter uma planilha Excel em CSV com Python?
+Como eu filtro as linhas em que a coluna "status" é igual a "Ativo"?
+Como juntar duas planilhas diferentes em um único DataFrame?
+Como excluir as linhas que têm valores nulos na coluna "idade"?
+Como preencher valores nulos com a média da coluna no pandas?
+Como converter uma coluna de datas para o formato datetime?
+Como agrupar os dados pela coluna "categoria" e somar os valores?
+Como criar uma nova coluna que seja o lucro dividido pela receita?
+Como aplicar uma função personalizada em cada linha do DataFrame?
+Gere para mim um gráfico de barras com os dados da coluna "vendas" da minha planilha em python.
+Gere para mim o código de um gráfico de linha com os valores de "lucro" ao longo do tempo em python.
+Gere para mim o código de um gráfico de pizza com a distribuição da coluna "setor" em python.
+Gere para mim o código de um gráfico de dispersão comparando "investimento" e "retorno" em python.
+Gere para mim o código de um histograma com os valores da coluna "idade" em python.
+Gere para mim a média da coluna "faturamento" da planilha "empresa.xlsx" em python.
+Gere para mim a variância dos salários da planilha "funcionarios.csv" em python.
+Gere para mim o desvio padrão da coluna "tempo_de_entrega" em python.
+Gere para mim a soma total da coluna "vendas" por mês em python.
+Gere para mim a mediana dos valores da coluna "preço_unitário" em python.
+Gere para mim uma tabela com apenas as linhas onde o "status" é "ativo".
+Gere para mim uma planilha com os dados agrupados por "categoria" em python.
+Gere para mim uma nova coluna chamada "lucro_total" que seja "vendas - custo" em python.
+Gere para mim os 10 maiores valores da coluna "receita" em python.
+Gere para mim uma tabela com a contagem de cada item da coluna "produto" em python.
+Gere para mim um DataFrame sem valores nulos em python.
+Gere para mim um conjunto de dados com a coluna "data" convertida para datetime em python.
+Gere para mim um gráfico só com os dados dos últimos 12 meses em python.
+Gere para mim uma versão da planilha com os valores duplicados removidos em python.
+Gere para mim os dados normalizados da coluna "nota_final" em python.
+Gere para mim o código de uma curtose e a assimetria da coluna "lucro_bruto" em python.
+Gere para mim o código que calucla quartis e o intervalo interquartílico da coluna "preço" em python.
+Gere para mim o código de uma análise de outliers usando o método de boxplot na coluna "rendimento" em python.
+Gere para mim o código que faça um resumo estatístico com média, mediana, moda, variância e desvio padrão da coluna "tempo_resposta" em python. 
+Gere para mim a matriz de correlação entre todas as colunas numéricas da minha planilha.
+Gere para mim um gráfico de dispersão com linha de regressão linear entre "investimento" e "retorno".
+Gere para mim os coeficientes de uma regressão linear entre "horas_de_estudo" e "nota_final".
+Gere para mim um teste de correlação de Spearman entre "idade" e "satisfacao" num exemplo de código python.
+Gere para mim um código em python e teste um intervalo de confiança de 95% para a média da coluna "salário".
+Gere para mim um teste t de Student comparando "nota_turma_A" e "nota_turma_B" em python.
+Gere para mim um teste qui-quadrado entre as colunas "categoria_produto" e "preferencia" em python.
+Gere para mim um código em python e teste ANOVA entre as colunas "nota" e "grupo_estudo".
+Gere para mim um código em python e teste os resíduos de uma regressão linear e verifique se seguem uma distribuição normal.
+Gere para mim um código em python e teste uma regressão logística para prever "compra" (sim/não) a partir de "idade" e "renda"
+Gere para mim uma análise de componentes principais (PCA) com as colunas numéricas do dataset em python.
+Gere para mim uma decomposição da série temporal da coluna "vendas_mensais" em python.
+Gere para mim um modelo ARIMA para prever "demanda" nos próximos 3 meses em python.
+Gere para mim a autocorrelação e a autocorrelação parcial da coluna "estoque_semanal" em python.
+Como eu leio um arquivo vendas.xlsx com pandas?
+Como eu mostro as 5 primeiras linhas da planilha em python?
+Como eu mostro o nome de todas as colunas do meu DataFrame em python?
+Como eu seleciono apenas a coluna "preço" do meu arquivo em python?
+Como eu filtro todas as linhas em que o "produto" é igual a "Camiseta" em python?
+Como eu ordeno os dados pelo valor da coluna "lucro" de forma decrescente em python?
+Como eu removo as linhas com valores nulos em python?
+Como eu preencho os valores nulos da coluna "estoque" com 0 em python?
+Como eu renomeio a coluna "prod" para "produto" em python?
+Como eu removo a coluna "desconto" em python?
+Como eu faço um gráfico de barras com a soma de "vendas" por "produto" em python?
+Como eu faço um gráfico de pizza com a porcentagem de vendas por "categoria" em python?
+Como eu faço um gráfico de linha com as "vendas" ao longo do tempo em python?
+Como eu faço um histograma com os valores da coluna "preço" em python?
+Como eu faço um boxplot da coluna "lucro" em python?
