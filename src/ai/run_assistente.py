@@ -1,5 +1,5 @@
 import os
-from src.ai.assistente import AssistenteAnaliseDados
+from src.AI.assistente import AssistenteAnaliseDados
 
 def main():
 

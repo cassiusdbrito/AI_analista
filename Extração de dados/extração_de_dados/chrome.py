@@ -8,14 +8,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 import firebase_admin
-from firebase_admin import credentials, firestore
+
 
 # Caminho do chromedriver
 chromedriver_path = r"C:\Users\cassi\Desktop\chromedriver.exe"
 
-cred = credentials.Certificate("bbafc8210d3200073510143890ac3e137aa2e0db")
+cred = firebase_admin.credentials.Certificate("bbafc8210d3200073510143890ac3e137aa2e0db")
 firebase_admin.initialize_app(cred)
-db = firestore.client()
+db = firebase_admin.firestore.client()
 # Perguntas
 perguntas = [
     "Como eu faço um grafico de barras com python? Me responda no modelo [pergunta, resposta]",
@@ -79,5 +79,5 @@ for i, r in enumerate(respostas):
         doc_ref.set({
             "pergunta": pergunta,
             "resposta": r,
-            "timestamp": firestore.SERVER_TIMESTAMP
+            "timestamp": firebase_admin.firestore.SERVER_TIMESTAMP
         })

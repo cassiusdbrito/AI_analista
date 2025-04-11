@@ -21,6 +21,8 @@ bitsandbytes = "^0.41.0"
 bs4 = "^0.0.2"
 selenium = "^4.30.0"
 pyautogui = "^0.9.54"
+firebase-admin = "^6.7.0"
+webdriver-manager = "^4.0.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"
